@@ -1,2 +1,7 @@
-/lesson-*/composer.lock
-/lesson-*/vendor
+.gitignore
+.vscode
+.env
+/cur
+/vendor
+cache.txt
+database.sqlite
