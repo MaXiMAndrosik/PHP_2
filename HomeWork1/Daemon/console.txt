@@ -1,0 +1,8 @@
+
+reminder-bot@reminderbot-VirtualBox:~/HomeWork1/Daemon$ nohup php mydaemon.php > outputNohup.log 2>&1 &
+[1] 4627
+
+reminder-bot@reminderbot-VirtualBox:~/HomeWork1/Daemon$ echo $?
+0
+[1]+  Done                    nohup php mydaemon.php > outputNohup.log 2>&1
+

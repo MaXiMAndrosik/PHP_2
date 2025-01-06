@@ -1,0 +1,34 @@
+reminder-bot@reminderbot-VirtualBox:~/HomeWork1/Supervisor$ systemctl restart supervisor
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to restart 'supervisor.service'.
+Authenticating as: reminder-bot,,, (reminder-bot)
+Password:
+==== AUTHENTICATION COMPLETE ===
+
+reminder-bot@reminderbot-VirtualBox:~/HomeWork1/Supervisor$ systemctl status supervisor
+● supervisor.service - Supervisor process control system for UNIX
+     Loaded: loaded (/lib/systemd/system/supervisor.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2025-01-07 00:41:09 MSK; 1min 6s ago
+       Docs: http://supervisord.org
+   Main PID: 4393 (supervisord)
+      Tasks: 5 (limit: 2201)
+     Memory: 41.1M
+        CPU: 223ms
+     CGroup: /system.slice/supervisor.service
+             ├─4393 /usr/bin/python3 /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+             ├─4396 /usr/bin/php /home/reminder-bot/HomeWork1/Supervisor/daemon.php
+             ├─4398 /usr/bin/php /home/reminder-bot/HomeWork1/Supervisor/daemon.php
+             ├─4400 /usr/bin/php /home/reminder-bot/HomeWork1/Supervisor/daemon.php
+             └─4402 /usr/bin/php /home/reminder-bot/HomeWork1/Supervisor/daemon.php
+
+Jan 07 00:41:10 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:10,068 INFO supervisord started with pid 4393
+Jan 07 00:41:11 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:11,076 INFO spawned: 'my_script' with pid 4395
+Jan 07 00:41:11 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:11,097 INFO exited: my_script (exit status 0; not expected)
+Jan 07 00:41:12 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:12,100 INFO spawned: 'my_script' with pid 4397
+Jan 07 00:41:12 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:12,119 INFO exited: my_script (exit status 0; not expected)
+Jan 07 00:41:14 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:14,124 INFO spawned: 'my_script' with pid 4399
+Jan 07 00:41:14 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:14,143 INFO exited: my_script (exit status 0; not expected)
+Jan 07 00:41:17 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:17,153 INFO spawned: 'my_script' with pid 4401
+Jan 07 00:41:17 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:17,178 INFO exited: my_script (exit status 0; not expected)
+Jan 07 00:41:18 reminderbot-VirtualBox supervisord[4393]: 2025-01-07 00:41:18,180 INFO gave up: my_script entered FATAL state, too many start retries too quickly
+

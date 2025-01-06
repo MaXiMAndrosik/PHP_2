@@ -1,7 +1,6 @@
 .gitignore
 .vscode
 .env
-/cur
-/vendor
+vendor
 cache.txt
 database.sqlite

@@ -1,0 +1,12 @@
+[Unit]
+Description=My PHP Script Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php8.2 /home/reminder-bot/HomeWork1/Systemd/mysystemd.php
+Restart=always
+RestartSec=120s
+
+[Install]
+WantedBy=multi-user.target
