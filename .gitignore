@@ -2,5 +2,7 @@
 .vscode
 .env
 vendor
+composer.lock
 cache.txt
 database.sqlite
+tg-bot-php-main.zip
