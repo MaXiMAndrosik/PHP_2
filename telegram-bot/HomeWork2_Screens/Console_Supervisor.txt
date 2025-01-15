@@ -1,0 +1,25 @@
+root@reminderbot-VirtualBox:/home/reminder-bot# supervisorctl status
+worker:worker_00                 RUNNING   pid 12261, uptime 0:37:17
+root@reminderbot-VirtualBox:/home/reminder-bot# systemctl status supervisor
+● supervisor.service - Supervisor process control system for UNIX
+     Loaded: loaded (/lib/systemd/system/supervisor.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2025-01-12 22:43:03 MSK; 37min ago
+       Docs: http://supervisord.org
+   Main PID: 12259 (supervisord)
+      Tasks: 2 (limit: 2201)
+     Memory: 28.3M
+        CPU: 703ms
+     CGroup: /system.slice/supervisor.service
+             ├─12259 /usr/bin/python3 /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+             └─12261 php8.2 /home/reminder-bot/cur/runner -c handle_events_daemon
+
+Jan 12 22:43:03 reminderbot-VirtualBox systemd[1]: Stopped Supervisor process control system for UNIX.
+Jan 12 22:43:03 reminderbot-VirtualBox systemd[1]: supervisor.service: Consumed 2.464s CPU time.
+Jan 12 22:43:03 reminderbot-VirtualBox systemd[1]: Started Supervisor process control system for UNIX.
+Jan 12 22:43:03 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:03,893 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can s>
+Jan 12 22:43:03 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:03,893 INFO Included extra file "/etc/supervisor/conf.d/systemctl-worker.conf" during parsing
+Jan 12 22:43:03 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:03,899 INFO RPC interface 'supervisor' initialized
+Jan 12 22:43:03 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:03,899 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+Jan 12 22:43:03 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:03,900 INFO supervisord started with pid 12259
+Jan 12 22:43:04 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:04,902 INFO spawned: 'worker_00' with pid 12261
+Jan 12 22:43:05 reminderbot-VirtualBox supervisord[12259]: 2025-01-12 22:43:05,904 INFO success: worker_00 entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

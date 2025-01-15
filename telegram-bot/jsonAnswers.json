@@ -1,0 +1,50 @@
+{
+    "ok": true,
+    "result": [
+        {
+            "update_id": 457035225,
+            "message": {
+                "message_id": 14,
+                "from": {
+                    "id": 1430957990,
+                    "is_bot": false,
+                    "first_name": "Екатерина",
+                    "language_code": "ru"
+                },
+                "chat": {
+                    "id": 1430957990,
+                    "first_name": "Екатерина",
+                    "type": "private"
+                },
+                "date": 1736709410,
+                "text": "/start",
+                "entities": [
+                    {
+                        "offset": 0,
+                        "length": 6,
+                        "type": "bot_command"
+                    }
+                ]
+            }
+        },
+        {
+            "update_id": 457035226,
+            "message": {
+                "message_id": 25,
+                "from": {
+                    "id": 1430957990,
+                    "is_bot": false,
+                    "first_name": "Екатерина",
+                    "language_code": "ru"
+                },
+                "chat": {
+                    "id": 1430957990,
+                    "first_name": "Екатерина",
+                    "type": "private"
+                },
+                "date": 1736786936,
+                "text": "😘"
+            }
+        }
+    ]
+}

@@ -9,4 +9,5 @@ abstract class Command
     protected Application $app;
 
     abstract function run(array $options = []): void;
+
 }
