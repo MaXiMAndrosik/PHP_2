@@ -8,9 +8,7 @@ use App\EventSender\EventSender;
 use App\Models\Event;
 use App\Telegram\TelegramApiImpl;
 
-class HandleEventsCommand extends Command
-
-{
+class HandleEventsCommand extends Command {
 
     protected Application $app;
 
@@ -32,36 +30,31 @@ class HandleEventsCommand extends Command
             if ($this->shouldEventBeRan($event)) {
 
                 $eventSender->sendMessage($event['receiver_id'], $event['text']);
-
             }
-
         }
-
     }
 
-    private function shouldEventBeRan($event): bool {
-        
+    public function shouldEventBeRan($event): bool {
+
         $currentMinute = date("i");
-
         $currentHour = date("H");
-
         $currentDay = date("d");
-
         $currentMonth = date("m");
-
         $currentWeekday = date("w");
 
+        foreach ($event as $key => $value) {
+            if ($value === null) {
+                $createVarName = 'current' . ucfirst($key);
+                $event[$key] = (int)${$createVarName};
+            }
+        }
+
         return // true;
-            
+
             ($event['minute'] === (int)$currentMinute &&
-
-            $event['hour'] === (int)$currentHour &&
-
-            $event['day'] === (int)$currentDay &&
-
-            $event['month'] === (int)$currentMonth &&
-            
-            $event['day_of_week'] === (int)$currentWeekday);
+                $event['hour'] === (int)$currentHour &&
+                $event['day'] === (int)$currentDay &&
+                $event['month'] === (int)$currentMonth &&
+                $event['weekday'] === (int)$currentWeekday);
     }
-
 }

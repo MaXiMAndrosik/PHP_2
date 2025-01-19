@@ -6,26 +6,22 @@ namespace App\Commands;
 
 use App\Application;
 
-class HandleEventsDaemonCommand extends Command
-{
+class HandleEventsDaemonCommand extends Command {
     protected Application $app;
 
     const CACHE_PATH = __DIR__ . '/../../cache.txt';
 
-    public function __construct(Application $app)
-    {
+    public function __construct(Application $app) {
         $this->app = $app;
     }
 
-    public function run(array $options = []): void
-    {
+    public function run(array $options = []): void {
         $this->initPcntl();
 
         $this->daemonRun($options);
     }
 
-    private function initPcntl(): void
-    {
+    private function initPcntl(): void {
         $callback = function ($signal) {
             switch ($signal) {
                 case SIGTERM:
@@ -44,8 +40,7 @@ class HandleEventsDaemonCommand extends Command
         pcntl_signal(SIGINT, $callback);
     }
 
-    private function daemonRun(array $options)
-    {
+    private function daemonRun(array $options) {
         $lastData = $this->getLastData();
 
         $handleEventsCommand = new HandleEventsCommand($this->app);
@@ -65,8 +60,7 @@ class HandleEventsDaemonCommand extends Command
         }
     }
 
-    private function getCurrentTime(): array
-    {
+    public function getCurrentTime(): array {
         return [
             date("i"),
             date("H"),
@@ -76,8 +70,7 @@ class HandleEventsDaemonCommand extends Command
         ];
     }
 
-    private function getLastData(): array
-    {
+    private function getLastData(): array {
         $lastData = file_get_contents(self::CACHE_PATH);
 
         if ($lastData) {
