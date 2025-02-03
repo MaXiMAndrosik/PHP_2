@@ -2,13 +2,17 @@
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers HandleEventsCommand
+ */
+
 class HandleEventsCommandTest extends TestCase {
     
     /**
     * @dataProvider someDataProvider
     */    
 
-    public function testShouldEventBeRanReceiveReturnBool (array $event, bool  $shouldEventBeRan): void {
+    public function testShouldEventBeRunReceiveReturnBool (array $event, bool  $shouldEventBeRan): void {
 
         // var_dump($event, $shouldEventBeRan);
         // echo date('d M Y H:i');
@@ -16,7 +20,7 @@ class HandleEventsCommandTest extends TestCase {
 
         $handleEventsCommand = new App\Commands\HandleEventsCommand(new App\Application(dirname(__DIR__)));
 
-        $result = $handleEventsCommand->shouldEventBeRan($event);
+        $result = $handleEventsCommand->shouldEventBeRun($event);
 
 
         self::assertEquals($result, $shouldEventBeRan);

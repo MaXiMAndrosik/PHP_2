@@ -4,8 +4,9 @@ namespace App\Commands;
 
 use App\Application;
 use App\Database\SQLite;
-use App\EventSender\EventSender;
+use App\Actions\EventSender;
 use App\Models\Event;
+use App\Queue\RabbitMQ;
 use App\Telegram\TelegramApiImpl;
 
 class HandleEventsCommand extends Command {
@@ -13,28 +14,26 @@ class HandleEventsCommand extends Command {
     protected Application $app;
 
     public function __construct(Application $app) {
-
         $this->app = $app;
     }
 
     public function run(array $options = []): void {
 
         $event = new Event(new SQLite($this->app));
-
         $events = $event->select();
 
-        $eventSender = new EventSender(new TelegramApiImpl($this->app->env('TELEGRAM_TOKEN')));
+        $queue = new RabbitMQ('eventSender');
+
+        $eventSender = new EventSender(new TelegramApiImpl($this->app->env('TELEGRAM_TOKEN')), $queue);
 
         foreach ($events as $event) {
-
-            if ($this->shouldEventBeRan($event)) {
-
+            if ($this->shouldEventBeRun($event)) {
                 $eventSender->sendMessage($event['receiver_id'], $event['text']);
             }
         }
     }
 
-    public function shouldEventBeRan($event): bool {
+    public function shouldEventBeRun($event): bool {
 
         $currentMinute = date("i");
         $currentHour = date("H");

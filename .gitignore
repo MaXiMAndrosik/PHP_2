@@ -3,6 +3,14 @@
 .env
 vendor
 composer.lock
+composer.phar
 cache.txt
+
+# ./database
 database.sqlite
+
+# ./tests - отчеты
+html
+phpunit.cache
+
 tg-bot-php-main.zip

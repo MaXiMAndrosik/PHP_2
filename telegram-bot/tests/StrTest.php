@@ -3,6 +3,10 @@
 use App\Helpers\Str;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers Str
+ */
+
 class StrTest extends TestCase
 {
     /**
@@ -13,7 +17,7 @@ class StrTest extends TestCase
     {
         $str = new Str();
 
-        $result = $str->studly($value);
+        $result = $str->camel($value);
 
         self::assertEquals($result, $studly);
     }

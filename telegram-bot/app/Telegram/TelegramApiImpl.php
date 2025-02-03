@@ -2,6 +2,8 @@
 
 namespace App\Telegram;
 
+use Exception;
+
 class TelegramApiImpl implements TelegramApi {
 
     const ENDPOINT = 'https://api.telegram.org/bot';
@@ -9,7 +11,7 @@ class TelegramApiImpl implements TelegramApi {
     private int $offset;
     private string $token;
 
-    public function __construct(string $token, int $offset = 1)
+    public function __construct(string $token, int $offset = 0)
     {
         $this->token = $token;
         $this->offset = $offset;
@@ -19,20 +21,31 @@ class TelegramApiImpl implements TelegramApi {
      * @param int $offset
      */
 
-    public function getMessage(int $offset): array {
-        $url = self::ENDPOINT . $this->token . '/getUpdates?timeout=1';
+    public function getMessages(int $offset): array {
+        $url = self::ENDPOINT .$this->token . '/getUpdates?timeout=1';
         $result = [];
 
         while (true) {
 
             $ch = curl_init("{$url}&offset={$offset}");
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json')); // Set the content type to application/json
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response instead of printing it
+            // Set the content type to application/json
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            // Return the response instead of printing it
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            
+            // curl_setopt($ch,CURLOPT_VERBOSE,1);
+            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Не рекомендуется отключать проверку SSL-пиров
+             // Рекомендуется использовать нативное хранилище корневых сертификатов вашей ОС
+            curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
 
             $response = json_decode(curl_exec($ch), true);
 
+            if (!$response) {
+                print curl_errno($ch) .': '. curl_error($ch) . PHP_EOL;
+            }
+
             if (!$response['ok'] || empty($response['result'])) break;
+
             foreach ($response['result'] as $data) {
                 $result[$data['message']['chat']['id']] = [...$result[$data['message']['chat']['id']] ?? [], $data['message']['text']];
                 $offset = $data['update_id'] + 1;
@@ -69,6 +82,7 @@ class TelegramApiImpl implements TelegramApi {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData); // Attach the encoded JSON data
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json')); // Set the content type to application/json
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response instead of printing it
+        curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
 
         curl_exec($ch);
 

@@ -17,7 +17,6 @@ class HandleEventsDaemonCommand extends Command {
 
     public function run(array $options = []): void {
         $this->initPcntl();
-
         $this->daemonRun($options);
     }
 
@@ -27,10 +26,8 @@ class HandleEventsDaemonCommand extends Command {
                 case SIGTERM:
                 case SIGINT:
                 case SIGHUP:
-                    $lastData = $this->getCurrentTime();
-                    $lastData[0] = $lastData[0] - 1;
-
-                    file_put_contents(self::CACHE_PATH, json_encode($lastData));
+                    $lastData = time();
+                    file_put_contents(self::CACHE_PATH, $lastData);
                     exit;
             }
         };
@@ -41,42 +38,31 @@ class HandleEventsDaemonCommand extends Command {
     }
 
     private function daemonRun(array $options) {
-        $lastData = $this->getLastData();
+
+        if (file_exists(self::CACHE_PATH)) {
+            $lastData = (int)file_get_contents(self::CACHE_PATH);
+        } else {
+            $lastData = time();
+            file_put_contents(self::CACHE_PATH, $lastData);
+        }
 
         $handleEventsCommand = new HandleEventsCommand($this->app);
+        $queueManagerCommand = new QueueManagerCommand($this->app);
+
+        $queueManagerCommand->run($options);
 
         while (true) {
-            if ($lastData === $this->getCurrentTime()) {
+            if ($lastData === time()) {
                 sleep(10);
-
                 continue;
             }
 
             $handleEventsCommand->run($options);
 
-            $lastData = $this->getCurrentTime();
+            $lastData = time();
 
             sleep(10);
         }
     }
 
-    public function getCurrentTime(): array {
-        return [
-            date("i"),
-            date("H"),
-            date("d"),
-            date("m"),
-            date("w")
-        ];
-    }
-
-    private function getLastData(): array {
-        $lastData = file_get_contents(self::CACHE_PATH);
-
-        if ($lastData) {
-            return json_decode($lastData);
-        }
-
-        return [];
-    }
 }

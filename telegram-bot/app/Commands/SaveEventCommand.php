@@ -3,11 +3,12 @@
 namespace App\Commands;
 
 use App\Application;
-use App\Database\SQLite;
+use App\Actions\CronValues;
+use App\Actions\EventSaver;
 use App\Models\Event;
+use App\Database\SQLite;
 
-//php runner -c save_event --name 'Имя события' --receiver ‘Айди получателя, пока
-//любой’ --text 'Текст напоминания' --cron '* * * * *'
+//php runner -c save_event --name 'Имя события' --receiver 'Айди получателя, пока любой' --text 'Текст напоминания' --cron '* * * * *'
 class SaveEventCommand extends Command {
 
     protected Application $app;
@@ -18,22 +19,23 @@ class SaveEventCommand extends Command {
 
     public function run(array $options  = []): void {
 
-        $options = $this->getGetoptOptionValues();
+        $options = $this->getOptionValues();
 
         if ($this->isNeedHelp($options)) {
             $this->showHelp();
             return;
         }
 
-        $cronValues = $this->getCronValues($options['cron']);
+        $this->handleEvent($options);
 
-        if (count($cronValues) != 5) {
-            $this->showHelp();
-            return;
-        }
+    }
+
+    public function handleEvent(array $options  = []): void {
+
+        $cron = new CronValues();
+        $cronValues = $cron->getCronValues($options['cron']);
 
         $params = [
-
             'name' => $options['name'],
             'text' => $options['text'],
             'receiver_id' => $options['receiver'],
@@ -44,15 +46,18 @@ class SaveEventCommand extends Command {
             'weekday' => $cronValues[4]
         ];
 
-        $this->saveEvent($params);
+        $eventModel = new Event(new SQLite($this->app));
+        
+        $eventSaver =  new EventSaver($eventModel);
+
+        $eventSaver->handle($params);
     }
 
-    private function getGetoptOptionValues(): array {
+    public function getOptionValues(): array {
 
         $shortopts = 'c:h:';
 
         $longopts = [
-
             "command:",
             "name:",
             "text:",
@@ -81,11 +86,8 @@ class SaveEventCommand extends Command {
 	Чтобы добавить правило нужно перечислить следующие поля:
 
 	--name Имя события
-
 	--text Текст, который будет отправлен по событию
-
-	--cron  Расписания отправки в формате cron
-
+	--cron Расписания отправки в формате cron
 	--receiver Идентификатор получателя сообщения
 
 	Для справки используйте флаги -h или --help
@@ -93,28 +95,4 @@ class SaveEventCommand extends Command {
 ";
     }
 
-    public function getCronValues(string $cronString): array {
-
-        $cronValues = explode(" ", $cronString);
-
-        $cronValues = array_map(function ($item) {
-
-            return $item === "*" ? null : $item;
-        }, $cronValues);
-
-        return $cronValues;
-    }
-
-    private function saveEvent(array $params): void {
-
-        $event = new Event(new SQLite($this->app));
-
-        $event->insert(
-
-            implode(', ', array_keys($params)),
-
-            array_values($params)
-
-        );
-    }
 }
