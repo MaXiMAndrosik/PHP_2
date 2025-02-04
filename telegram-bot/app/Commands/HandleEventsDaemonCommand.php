@@ -61,7 +61,7 @@ class HandleEventsDaemonCommand extends Command {
 
             $lastData = time();
 
-            sleep(10);
+            sleep(55);
         }
     }
 

@@ -19,7 +19,7 @@ class TgMessagesDaemonCommand extends Command {
     }
 
     public function run(array $options = []): void {
-        // $this->initPcntl();
+        $this->initPcntl();
         $this->daemonRun($options);
     }
 
@@ -34,7 +34,7 @@ class TgMessagesDaemonCommand extends Command {
 
         while (true) {
             if ($lastData === time()) {
-                sleep(2);
+                sleep(5);
                 continue;
             }
 
@@ -42,26 +42,25 @@ class TgMessagesDaemonCommand extends Command {
 
             $lastData = time();
 
-            // sleep(5);
-            // exit();
+            sleep(5);
         }
     }
 
-    // private function initPcntl(): void {
-    //     $callback = function ($signal) {
-    //         switch ($signal) {
-    //             case SIGTERM:
-    //             case SIGINT:
-    //             case SIGHUP:
-    //                 $lastData = time();
-    //                 file_put_contents(self::CACHE_PATH, $lastData);
-    //                 exit;
-    //         }
-    //     };
+    private function initPcntl(): void {
+        $callback = function ($signal) {
+            switch ($signal) {
+                case SIGTERM:
+                case SIGINT:
+                case SIGHUP:
+                    $lastData = time();
+                    file_put_contents(self::CACHE_PATH, $lastData);
+                    exit;
+            }
+        };
 
-    //     pcntl_signal(SIGTERM, $callback);
-    //     pcntl_signal(SIGHUP, $callback);
-    //     pcntl_signal(SIGINT, $callback);
-    // }
+        pcntl_signal(SIGTERM, $callback);
+        pcntl_signal(SIGHUP, $callback);
+        pcntl_signal(SIGINT, $callback);
+    }
 
 }

@@ -140,11 +140,10 @@ class TgEvent {
     }
 
     public function checkReceiverData(int $receiverData): bool {
-        return true;
-        // if (is_int($receiverData) && $receiverData >= 100000000 && $receiverData <= 999999999) {
-        //     return true;
-        // }
-        // return false;
+        if (is_int((int)$receiverData)) {
+            return true;
+        }
+        return false;
     }
 
     // public function runEvent(array $inMessages): void {}
